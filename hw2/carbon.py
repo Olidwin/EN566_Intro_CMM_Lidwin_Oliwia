@@ -19,7 +19,7 @@ def euler(step_size, total_time): #Euler approximation method calculation values
         
     return N
 
-def plot(width): #Default plotting for when a width is not provided. Width as a parameter will always be 1000 for this case.
+def plot(width): #method was used to show figueres found in LaTex doc.
     x1 = np.arange(0,20001,10)
     x2 = np.arange(0,20001,100)
     x3 = np.arange(0,20001,1)
@@ -73,21 +73,20 @@ def plotByRequest(width): #Plotting only the
     
 
 def main():    
-    if len(sys.argv) < 1 and len(sys.argv) < 3:
-        print("Usage: python carbon.py (OPTIONAL)--plot=<width>")
+    if len(sys.argv) != 2:
+        print("Usage: python carbon.py --plot=<width>")
         sys.exit(1)
         
     width = 0   
     
-    if len(sys.argv) == 1:
-        plot(1000) 
+# Uncomment the following line to create the figures found in the LaTex doc.
+    #     plot(1000) 
     
-    else:
-        width_arg = sys.argv[1]
-        if width_arg.startswith('--plot='):
-            width = int(width_arg[len('--plot='):])
-            print(width)
-            plotByRequest(width)
+    width_arg = sys.argv[1]
+    if width_arg.startswith('--plot='):
+        width = int(width_arg[len('--plot='):])
+        print(width)
+        plotByRequest(width)
 
 
 if __name__ == "__main__":

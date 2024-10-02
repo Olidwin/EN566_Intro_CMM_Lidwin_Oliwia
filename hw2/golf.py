@@ -150,21 +150,15 @@ def plotAllFourTraj(angle):
 
 
 def main():
-    if len(sys.argv) < 1 and len(sys.argv) < 3 :
-        print("Usage: python golf.py (Optional)--plot=<theta>")
+    if len(sys.argv) !=2:
+        print("Usage: python golf.py --plot=<theta>")
         sys.exit(1)
         
-    if len(sys.argv) == 2:
-        theta_arg = sys.argv[1]
-        if theta_arg.startswith('--plot='):
-            theta = int(theta_arg[len('--plot='):])
-            print(theta)
-            plotAllFourTraj(theta)
-    else: #default if the optional paramtere is not provided.
-        plotAllFourTraj(45)
-        plotAllFourTraj(30)
-        plotAllFourTraj(15)
-        plotAllFourTraj(9)
+    theta_arg = sys.argv[1]
+    if theta_arg.startswith('--plot='):
+        theta = int(theta_arg[len('--plot='):])
+        print(theta)
+        plotAllFourTraj(theta)
 
 
 

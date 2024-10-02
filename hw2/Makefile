@@ -1,5 +1,5 @@
-WIDTH := width 
-THETA := theta
+WIDTH := 10
+THETA := 45
 
 .PHONY: carbon golf
 
