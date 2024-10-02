@@ -145,6 +145,7 @@ def plotAllFourTraj(angle):
     plt.ylim(bottom=0)
     plt.grid()
     plt.legend()
+    plt.savefig(f"ProjectileAngle{angle}.png")
     plt.show()
 
 
