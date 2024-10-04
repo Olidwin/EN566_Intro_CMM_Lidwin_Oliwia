@@ -77,10 +77,9 @@ def plotByRequest(width): #Plotting only the requested graph
     
 
 def main():  
-    if len(sys.argv) == 1: #gets you Figures 1 and 2 from the Latex Doc
-        plot(1000) 
-        
-    elif len(sys.argv) == 2:
+    #plot(1000) this was used to create the figures in the LatexDoc
+    
+    if len(sys.argv) == 2:
         width_arg = sys.argv[1]
         if width_arg.startswith('--plot='):
             width = int(width_arg[len('--plot='):])

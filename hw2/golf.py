@@ -146,13 +146,7 @@ def plotAllFourTraj(angle): #plot outputs from the methods above.
 
 
 def main():
-    if (len(sys.argv) == 1): #if no optional parameter input, display default 4 plots used for LaTex file
-        plotAllFourTraj(45)
-        plotAllFourTraj(30)
-        plotAllFourTraj(15)
-        plotAllFourTraj(9)
-
-    elif (len(sys.argv) == 2): #if angle is provided, create it's plot.
+    if (len(sys.argv) == 2): #if angle is provided, create it's plot.
         theta_arg = sys.argv[1]
         if theta_arg.startswith('--plot='):
             theta = int(theta_arg[len('--plot='):])
