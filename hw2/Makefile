@@ -9,7 +9,7 @@ carbon:
 
 golf:
 	@echo "Plotting the carbon graph with $(THETA)"
-	python3 carbon.py --plot=${THETA}
+	python3 golf.py --plot=${THETA}
 
 clean:
 	@echo "Cleaning..."
