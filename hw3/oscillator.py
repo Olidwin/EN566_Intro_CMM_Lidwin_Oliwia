@@ -58,19 +58,16 @@ def plotPart4(R0t, R0o, R1t, R1o):
     
 def plotEnergies(theta, omega):
     x1 = np.arange(0, 1000.01, 0.01)
-    m = 1  # mass in kg
+    m = 1
     kinetic = np.zeros(len(theta))
     potential = np.zeros(len(theta))
     total = np.zeros(len(theta))
 
     for i in range(len(theta)):
-        # Calculate the velocity from angular velocity
-        velocity = l * omega[i]  # l = length of pendulum
+        velocity = l * omega[i] 
         kinetic[i] = 0.5 * m * (velocity ** 2)
-        
-        # Calculate potential energy using the height from the vertical position
-        height = l * (1 - np.cos(theta[i]))  # h = l(1 - cos(theta))
-        potential[i] = m * g * height  # PE = mgh
+        height = l * (1 - np.cos(theta[i])) 
+        potential[i] = m * g * height  
         
         # Total energy
         total[i] = kinetic[i] + potential[i]
@@ -90,16 +87,12 @@ def plotEnergies(theta, omega):
 
     
 def plotRungeTheta(Ro):
-    omega = np.array([0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,0.9])
-    phase_shift = np.array([9501, 831, 33, 9, 3, 6, 13, 15, 2081, 880, 1543,1000])
-    amp = np.array([0.20187, 0.24001, 0.24063, 0.24262, 0.25088, 0.26611, 0.29149, 0.32739, 0.37649, 0.44611, 0.52086, 0.52091])
+    omega = np.array([0.001, 0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,0.85,0.9,1.0,1.5,2.0])
+    phase_shift = np.array([9501, 831, 33, 9, 3, 6, 13, 15, 2081, 880, 1543,35,1000,668,9,2203])
+    amp = np.array([0.20187, 0.24001, 0.24063, 0.24262, 0.25088, 0.26611, 0.29149, 0.32739, 0.37649, 0.44611, 0.52086, 0.54054, 0.52091,0.44627, 0.129,0.061])
 
     plt.figure(figsize=(8, 5))
-
-    # Scatter plot
     plt.scatter(omega, phase_shift, color='blue', label='Phase Shift Data')
-    
-    # Line connecting the points
     plt.plot(omega, phase_shift, linestyle='-', color='blue')
 
     plt.title('Phase Shift vs. Omega')
@@ -127,7 +120,7 @@ def Euler(step_size, total_time, frequency):
     theta[0] = 0
     omega[0] = 1
     time = time
-    for i in range(1,int(total_time/step_size)+1): #works similarly to a recursive method.
+    for i in range(1,int(total_time/step_size)+1): 
         time = time + step_size
         omega[i] = omega[i-1] + ( -(1)* theta[i-1] - 2 * y * omega[i-1] + a*math.sin(frequency*time))*step_size
         theta[i] = theta[i-1] + omega[i] * step_size
@@ -141,7 +134,7 @@ def Runge(step_size, total_time, frequency):
     omega = np.zeros(int(total_time/step_size)+1)
     theta[0] = 0
     omega[0] = 1
-    for i in range(1,int(total_time/step_size)+1): #works similarly to a recursive method.
+    for i in range(1,int(total_time/step_size)+1):
         o1 = omega[i-1]
         t1 = theta[i-1]
         o2 = omega[i-1] + 0.5 * (-(1) * theta[i-1] - 2 * y * omega[i-1] + a * math.sin(frequency * time)) * step_size
@@ -179,7 +172,7 @@ def NonLinear02(step_size, total_time, frequency, alpha, theta1):
         time = time + step_size
     return theta, omega
 
-def plotNonLinearForLyapunov(zero, one, two, three, four):
+def plotNonLinearForLyapunov(zero, one, two, three, four, num):
     curve1 = []
     curve1.append(np.abs(one-zero))
     curve2 = []
@@ -188,69 +181,97 @@ def plotNonLinearForLyapunov(zero, one, two, three, four):
     curve3.append(np.abs(three-two))
     curve4 = []
     curve4.append(np.abs(four-three))
+    x1 = np.arange(0, 100.01, 0.01)
     
-    plt.plot(t, dt, label=f'αD = {alpha_D_values[j]}, θ0 = {initial_angles[k]}')
+    findLyapunov(curve1)
+    findLyapunov(curve2)
+    findLyapunov(curve3)
+    findLyapunov(curve4)
 
+
+    plt.plot(x1, np.array(curve1).flatten(), label= f'theta from 0 to 0.001, Lyapunov = {findLyapunov(curve1)}')
+    plt.plot(x1, np.array(curve2).flatten(), label= f'theta from 0.001 to 0.002, Lyapunov = {findLyapunov(curve2)}')
+    plt.plot(x1, np.array(curve3).flatten(), label= f'theta from 0.002 to 0.003, Lyapunov = {findLyapunov(curve3)}')
+    plt.plot(x1, np.array(curve4).flatten(), label= f'theta from 0.003 to 0.004, Lyapunov = {findLyapunov(curve4)}')
+    plt.title('|Δθ(t)| for Various Initial Angles ')
+    plt.xlabel('Time (s)')
+    plt.ylabel('|Δθ(t)|')
+    plt.legend()
+    plt.grid()
+    plt.savefig(f"Part_5_{num}.png")
+    plt.show()
     
-
-
-    
+def findLyapunov(curve):
+    log_curve = np.log(curve[curve > 0])
+    time_valid = np.arange(len(log_curve)) * 0.01
+    lyapunov_exponent, _ = np.polyfit(time_valid, log_curve, 1)
+    return lyapunov_exponent
         
 def main():
-    Et, Eo = Euler(0.01, 100, 0.1)
-    Rt, Ro = Runge(0.01, 100, 0.1)
+    choice = 6
+    if (len(sys.argv) == 2): 
+        part = sys.argv[1]
+        if part.startswith('PART='):
+            choice = int(part[len('PART='):])
     
-    R0t,R0o = NonLinear02(0.01, 100, 0.1, 0.2, 0)
-    R1t,R1o = NonLinear02(0.01, 100, 0.1, 1.2, 0)
+    if choice == 2:
+        Et, Eo = Euler(0.01, 100, 1.5)
+        Rt, Ro = Runge(0.01, 100, 1.5)
+        
+        maxEt, maxRt, maxEo, maxRo = 0,0,0,0
+        indexEo, indexRo, indexRt, indexEt = 0,0,0,0
+        
+        for i in range(6000,10001):
 
-    plotPart4(R0t,R0o,R1t,R1o)
+            if maxEo < Eo[i]:
+                maxEo = Eo[i]
+                indexEo = i
+                
+            if maxRt < Rt[i]:
+                maxRt = Rt[i]
+                indexRt = i
+
+            if maxRo < Ro[i]:
+                maxRo = Ro[i]
+                indexRo = i
+                
+        print("Amp Runge-Kutta Theta: ", maxRt, " ", indexRt)
+        print("PhaseShift Runge-Kutta Omega: ", (indexRo-indexEo))
+
+        plot(Et, Eo, Rt, Ro)
+        plotRungeTheta(Ro)
+        
+    if choice == 3:
+        Rt1, Ro1 = Runge(0.01, 1000, 0.1)
+        plotEnergies(Rt1, Ro1)
+        
+    if choice == 4:
+        R0t,R0o = NonLinear02(0.01, 100, 0.1, 0.2, 0)
+        R1t,R1o = NonLinear02(0.01, 100, 0.1, 1.2, 0)
+        plotPart4(R0t,R0o,R1t,R1o)
     
-    R620t, R620o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.000)
-    R621t, R621o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.001)
-    R622t, R622o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.002)
-    R623t, R623o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.003)
-    R624t, R624o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.004)
-    
-    plotNonLinearForLyapunov(R620t,R621t,R622t,R623t,R624t)
+    if choice == 5:
+        R620t, R620o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.000)
+        R621t, R621o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.001)
+        R622t, R622o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.002)
+        R623t, R623o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.003)
+        R624t, R624o =  NonLinear02(0.01, 100, 0.666, 0.2, 0.004)
+        
+        plotNonLinearForLyapunov(R620t.flatten(),R621t.flatten(),R622t.flatten(),R623t.flatten(),R624t.flatten(), 0.2)
 
-
-    plotRungeTheta(Ro)
-    
-
-    maxEt, maxRt, maxEo, maxRo = 0,0,0,0
-    indexEo, indexRo, indexRt, indexEt = 0,0,0,0
-    
-    for i in range(600,1001):
-
-        if maxEo < Eo[i]:
-            maxEo = Eo[i]
-            indexEo = i
-            
-        if maxRt < Rt[i]:
-            maxRt = Rt[i]
-            indexRt = i
-
-        if maxRo < Ro[i]:
-            maxRo = Ro[i]
-            indexRo = i
-            
-    print("Amp Runge-Kutta Theta: ", maxRt, " ", indexRt)
-    print("PhaseShift Runge-Kutta Omega: ", (indexRo-indexEo))
-
-    plot(Et, Eo, Rt, Ro)
-    
-    Rt1, Ro1 = Runge(0.01, 1000, 0.1)
-    plotEnergies(Rt1, Ro1)
-
-    # if (len(sys.argv) == 2): #if angle is provided, create it's plot.
-    #     theta_arg = sys.argv[1]
-    #     if theta_arg.startswith('--part='):
-    #         theta = int(theta_arg[len('--part='):])
-    #         print(theta)
-            
-    # else:
-    #     print("Usage: python golf.py --plot=<theta>") #if wrong amount of parameters exit the code
-    #     sys.exit(1)
-
+        R620t, R620o =  NonLinear02(0.01, 100, 0.666, 0.5, 0.000)
+        R621t, R621o =  NonLinear02(0.01, 100, 0.666, 0.5, 0.001)
+        R622t, R622o =  NonLinear02(0.01, 100, 0.666, 0.5, 0.002)
+        R623t, R623o =  NonLinear02(0.01, 100, 0.666, 0.5, 0.003)
+        R624t, R624o =  NonLinear02(0.01, 100, 0.666, 0.5, 0.004)
+        
+        plotNonLinearForLyapunov(R620t,R621t,R622t,R623t,R624t, 0.5)
+        R620t, R620o =  NonLinear02(0.01, 100, 0.666, 1.2, 0.000)
+        R621t, R621o =  NonLinear02(0.01, 100, 0.666, 1.2, 0.001)
+        R622t, R622o =  NonLinear02(0.01, 100, 0.666, 1.2, 0.002)
+        R623t, R623o =  NonLinear02(0.01, 100, 0.666, 1.2, 0.003)
+        R624t, R624o =  NonLinear02(0.01, 100, 0.666, 1.2, 0.004)
+        
+        plotNonLinearForLyapunov(R620t,R621t,R622t,R623t,R624t, 1.2)
 if __name__ == "__main__":
     main()
