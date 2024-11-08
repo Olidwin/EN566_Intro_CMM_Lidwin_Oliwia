@@ -12,7 +12,7 @@ def setup():
     grid[:, :60//3] = 1
     grid[:, -60//3:] = -1
 
-    num_iterations = 10001
+    num_iterations = 1001
     count = 0
     while (count < num_iterations):
         ran_x = random.randint(0, 59)
@@ -56,7 +56,7 @@ def setup():
 
         count = count+1
         
-        if count % 1000 == 0 and moved:
+        if count % 100 == 0 and moved:
             print(count)
             snapshot.append(grid.copy())          
     return snapshot
@@ -76,10 +76,10 @@ def plotDensities(snapshot):
         plt.plot(x, densities[1], label=f'Density B')
         plt.xlabel("Position (x)")
         plt.ylabel("Population Density")
-        plt.title(f"Population Densities of A and B at {k*1000}")
+        plt.title(f"Population Densities of A and B at {k*100}")
         plt.legend()
         plt.grid(True)
-        plt.savefig(f"Density{k*1000}moves.png")
+        plt.savefig(f"Density{k*100}moves.png")
         plt.close()
         # plt.show()
         # Plot snapshots of the grid at each time interval
@@ -90,8 +90,8 @@ def plotDensities(snapshot):
         
         plt.xlabel("X Position")
         plt.ylabel("Y Position")
-        plt.title(f"Grid Configuration at {k*1000}")
-        plt.savefig(f"Grid{k*1000}.png")
+        plt.title(f"Grid Configuration at {k*100}")
+        plt.savefig(f"Grid{k*100}.png")
         plt.close()
         # plt.show()
     return densities
@@ -100,23 +100,13 @@ def plotDensities(snapshot):
 def repeat100():
     averageDensities= []
     counter = 0
-    for i in range(100):
+    for i in range(101):
         snapshots = setup()
         averageDensities.append(plotDensities(snapshots))
     print(len(averageDensities))
     print(len(averageDensities[0]))
     print(len(averageDensities[0][0]))
     print(counter)
-
-    averageArray = np.zeros(2,60)
-    for j in range(60):
-        for i in range(100):
-            averageArray[0][j] = averageDensities[i][0][j]
-            averageArray[1][j] = averageDensities[i][1][j]
-            
-    #     averageArray[0][j] = averageArray[0][j] / 100
-    #     averageArray[1][j] = averageArray[1][j] / 100
-    # return averageArray
 
     averageDensities = np.array(averageDensities)
     averageArray = np.mean(averageDensities, axis=0)
