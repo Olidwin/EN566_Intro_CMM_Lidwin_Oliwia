@@ -43,12 +43,12 @@ def partOne():
     mag = np.zeros(len(temperatures)) #mag of same dimension as the amount of temperatures being sampled
     index = 0
     for temp in temperatures:
-        for i in range(10000*len(lattice)** 2):
+        for i in range(100*len(lattice)** 2):
             lattice, e = step(lattice, temp)
-        for j in range(10000):
+        for j in range(100):
             lattice, e = step(lattice, temp)
             mag[index] += magnitization(lattice)
-        mag[index] = np.abs((mag[index]/(10000 * len(lattice)**2)))
+        mag[index] = np.abs((mag[index]/(100 * len(lattice)**2)))
         index += 1
         print(f"temp: {temp}")
     plt.figure(figsize=(8, 6))
@@ -58,10 +58,10 @@ def partOne():
     plt.ylabel("Magnetization (M)")
     plt.grid()
     plt.show()
-    plt.savefig("magtemp_10000.png")
+    plt.savefig("magtemp_100.png")
     
 def partTwo():
-    sizes = [100, 200, 500] #practice sizes
+    sizes = [5,10,20,30,40,50,75,100, 200, 500] #practice sizes
     log_n = np.log(sizes)
     print(log_n)
     c_max = np.zeros(len(sizes)) #array to store the maximum C/N values to compare with N and log(N)
@@ -73,13 +73,13 @@ def partTwo():
         c_n = np.zeros(len(temperatures)) #new C/N value for each size
         index_c = 0  #new c and C/N indexing
         for temp in temperatures:
-            for i in range(10000*size** 2): #iterate till equilibrium basically
+            for i in range(100*size** 2): #iterate till equilibrium basically
                 lattice, d_E = step(lattice, temp)
             print(f"size {size} temp ", temp)
-            energies = np.zeros(10001) #initialize an array of energies
+            energies = np.zeros(101) #initialize an array of energies
             energies[0] = energy(lattice) #set the first energy to the current lattice
             index = 1 #then the index of energies would be 1
-            for i in range(10000): #run 100 Monte-Carlos to get the change in energy from the previous microstate, and add the change to the previous microstate value.
+            for i in range(100): #run 100 Monte-Carlos to get the change in energy from the previous microstate, and add the change to the previous microstate value.
                 lattice, d_E = step(lattice, temp)
                 energies[index] = energies[index-1] + d_E #calculate the energy of the new configuration
                 index +=1
