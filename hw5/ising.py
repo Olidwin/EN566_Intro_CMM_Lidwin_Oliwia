@@ -61,7 +61,7 @@ def partOne():
     plt.savefig("magtemp_100.png")
     
 def partTwo():
-    sizes = [5,10,20,30,40,50,75,100, 200, 500] #practice sizes
+    sizes = [500] #practice sizes
     log_n = np.log(sizes)
     print(log_n)
     c_max = np.zeros(len(sizes)) #array to store the maximum C/N values to compare with N and log(N)
